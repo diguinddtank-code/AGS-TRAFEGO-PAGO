@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { REPORT_DATA } from './constants';
 import { PremiumCard } from './components/CyberCard';
+import { AnimatedCounter } from './components/AnimatedCounter';
 import { 
   PhoneCall, 
   DollarSign, 
@@ -33,7 +34,7 @@ const App: React.FC = () => {
     <div className="min-h-screen pb-28">
       
       {/* 1. Mobile Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 glass-nav px-6 py-4 flex justify-between items-center transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 z-50 glass-nav px-6 py-4 flex justify-between items-center transition-all duration-300 animate-slide-up">
         <div>
           <p className="text-[10px] font-bold text-gray-400 tracking-widest uppercase">CLIENTE</p>
           <h1 className="text-lg font-extrabold text-gray-900 leading-tight">{client.name}</h1>
@@ -49,28 +50,30 @@ const App: React.FC = () => {
       {/* Spacer for fixed header */}
       <div className="h-20"></div>
 
-      <main className="px-5 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <main className="px-5 space-y-6">
         
         {/* ===========================
             TAB: GOOGLE ADS
            =========================== */}
         {activeTab === Tab.ADS && (
-          <>
+          <div key="ads-container" className="space-y-6"> 
+            {/* Added key for React reconciliation on tab switch */}
+            
             {/* NEW HERO: Phone Calls & Clicks */}
             <div className="grid grid-cols-1 gap-4">
               
               {/* Card 1: Phone Calls (Primary Focus) */}
-              <PremiumCard gradient className="py-6">
+              <PremiumCard gradient className="py-6" delay={100}>
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                       <div className="bg-emerald-400/20 p-1.5 rounded-lg">
+                       <div className="bg-emerald-400/20 p-1.5 rounded-lg animate-pulse">
                           <PhoneCall className="w-4 h-4 text-emerald-300" />
                        </div>
                        <p className="text-blue-100 text-xs font-bold uppercase tracking-widest">Phone Calls</p>
                     </div>
                     <h2 className="text-5xl font-bold tracking-tight text-white mt-1">
-                      {totals.conversations}
+                      <AnimatedCounter value={totals.conversations} />
                     </h2>
                     <div className="mt-3 inline-flex items-center gap-1.5 bg-emerald-500/20 px-2 py-1 rounded text-emerald-300 border border-emerald-500/30">
                        <TrendingUp className="w-3 h-3" />
@@ -81,15 +84,15 @@ const App: React.FC = () => {
               </PremiumCard>
 
               {/* Card 2: Clicks */}
-              <PremiumCard gradient className="py-6 relative">
+              <PremiumCard gradient className="py-6 relative" delay={200}>
                  {/* Decorative background circle */}
-                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
+                 <div className="absolute -right-6 -top-6 w-24 h-24 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
                  
                  <div className="flex justify-between items-center relative z-10">
                     <div>
                       <p className="text-blue-200 text-xs font-bold uppercase tracking-widest mb-1">Total Clicks</p>
                       <h2 className="text-4xl font-bold tracking-tight text-white">
-                        {totals.clicks.toLocaleString()}
+                        <AnimatedCounter value={totals.clicks} />
                       </h2>
                     </div>
                     <div className="bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
@@ -101,25 +104,29 @@ const App: React.FC = () => {
 
             {/* SECONDARY METRICS: Investment & CPA */}
             <div className="grid grid-cols-2 gap-4">
-              <PremiumCard>
+              <PremiumCard delay={300}>
                 <div className="flex flex-col gap-2">
                   <div className="p-2 w-fit bg-gray-100 rounded-lg text-gray-600">
                     <DollarSign className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-2xl font-bold text-gray-900">${totals.investment.toLocaleString()}</span>
+                    <div className="text-2xl font-bold text-gray-900">
+                       <AnimatedCounter value={totals.investment} prefix="$" decimals={0} />
+                    </div>
                     <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">Investimento Total</p>
                   </div>
                 </div>
               </PremiumCard>
 
-              <PremiumCard>
+              <PremiumCard delay={400}>
                 <div className="flex flex-col gap-2">
                   <div className="p-2 w-fit bg-blue-50 rounded-lg text-blue-600">
                      <Target className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-2xl font-bold text-gray-900">${totals.costPerConversation}</span>
+                    <div className="text-2xl font-bold text-gray-900">
+                      <AnimatedCounter value={totals.costPerConversation} prefix="$" decimals={2} />
+                    </div>
                     <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">Custo por Call</p>
                   </div>
                 </div>
@@ -127,12 +134,15 @@ const App: React.FC = () => {
             </div>
 
             {/* 2026 STRATEGIC OUTLOOK */}
-            <PremiumCard className="bg-gradient-to-r from-indigo-600 to-purple-700 text-white border-none shadow-xl shadow-indigo-200 overflow-hidden relative">
+            <PremiumCard 
+              delay={500}
+              className="bg-gradient-to-r from-indigo-600 to-purple-700 text-white border-none shadow-xl shadow-indigo-200 overflow-hidden relative animate-float"
+            >
               <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
               
               <div className="flex items-start gap-4 relative z-10">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm shadow-inner border border-white/10">
-                  <Sparkles className="w-6 h-6 text-yellow-300 fill-yellow-300" />
+                  <Sparkles className="w-6 h-6 text-yellow-300 fill-yellow-300 animate-pulse" />
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2 tracking-tight text-white">Visão Estratégica 2026</h3>
@@ -145,15 +155,15 @@ const App: React.FC = () => {
             </PremiumCard>
 
             {/* Campaign Breakdown Title */}
-            <div className="pt-2 flex items-center justify-between">
+            <div className="pt-2 flex items-center justify-between animate-slide-up delay-500">
               <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Campanhas Ativas</h3>
               <span className="text-xs font-medium text-blue-600">{campaigns.length} Campaigns</span>
             </div>
 
             {/* Campaign Cards List */}
             <div className="space-y-4">
-              {campaigns.map((camp) => (
-                <PremiumCard key={camp.id} className="active:scale-[0.98] transition-transform">
+              {campaigns.map((camp, index) => (
+                <PremiumCard key={camp.id} delay={600 + (index * 100)} className="active:scale-[0.98] transition-transform">
                   <div className="flex justify-between items-start mb-4 border-b border-gray-100 pb-3">
                     <div>
                       <div className="flex items-center gap-2">
@@ -182,37 +192,67 @@ const App: React.FC = () => {
                 </PremiumCard>
               ))}
             </div>
-          </>
+          </div>
         )}
 
         {/* ===========================
             TAB: GMB (Google My Business)
            =========================== */}
         {activeTab === Tab.GMB && (
-          <>
+          <div key="gmb-container" className="space-y-6">
+            
             {/* PENDING ACTIONS / REQUESTS */}
             {pendingActions && pendingActions.length > 0 && (
-              <div className="space-y-4">
-                 {pendingActions.map(action => (
-                    <div key={action.id} className="bg-amber-50 border border-amber-200 rounded-2xl p-5 relative overflow-hidden">
-                       <div className="absolute top-0 right-0 p-3 opacity-10">
-                          <AlertCircle className="w-24 h-24 text-amber-600" />
-                       </div>
+              <div className="space-y-4 animate-slide-up">
+                 {pendingActions.map((action, idx) => (
+                    <div 
+                      key={action.id} 
+                      className="group relative overflow-hidden rounded-2xl bg-white p-1 shadow-sm hover:shadow-md transition-all duration-300"
+                      style={{ animationDelay: `${idx * 150}ms` }}
+                    >
+                       {/* Background Gradient Mesh */}
+                       <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-transparent opacity-100" />
                        
-                       <div className="flex items-start gap-3 relative z-10">
-                          <div className="bg-amber-100 p-2.5 rounded-xl text-amber-600 mt-1">
-                             <Camera className="w-5 h-5" />
-                          </div>
-                          <div className="flex-1">
-                             <h3 className="font-bold text-amber-900 text-base mb-1">{action.title}</h3>
-                             <p className="text-sm text-amber-800/80 leading-relaxed mb-3">
-                               {action.description}
-                             </p>
-                             <div className="inline-flex items-center gap-2 bg-amber-100/50 px-3 py-1.5 rounded-lg border border-amber-200">
-                                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                                <span className="text-xs font-bold text-amber-800 uppercase tracking-wide">Ação Necessária</span>
+                       <div className="relative bg-white/80 backdrop-blur-xl rounded-xl p-5 border border-amber-100 flex flex-col gap-4">
+                          
+                          {/* Header */}
+                          <div className="flex justify-between items-start">
+                             <div className="flex gap-4">
+                                <div className="relative">
+                                   <div className="absolute inset-0 bg-amber-200 blur-lg opacity-40 rounded-full" />
+                                   <div className="relative bg-gradient-to-br from-amber-100 to-orange-50 p-3 rounded-2xl border border-amber-200 text-amber-600 shadow-sm">
+                                      <Camera className="w-6 h-6" />
+                                   </div>
+                                </div>
+                                <div>
+                                   <div className="flex items-center gap-2 mb-1">
+                                      <span className="inline-flex items-center gap-1 bg-red-50 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-red-100">
+                                         <AlertCircle className="w-3 h-3" />
+                                         Ação Necessária
+                                      </span>
+                                      {action.priority === 'high' && (
+                                         <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100">
+                                            Alta Prioridade
+                                         </span>
+                                      )}
+                                   </div>
+                                   <h3 className="text-lg font-bold text-gray-900 leading-tight">
+                                      {action.title}
+                                   </h3>
+                                </div>
                              </div>
                           </div>
+
+                          {/* Body */}
+                          <p className="text-sm text-gray-600 leading-relaxed font-medium pl-1">
+                             {action.description}
+                          </p>
+
+                          {/* Footer Action */}
+                          <button className="mt-2 w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white py-3.5 rounded-xl text-sm font-bold transition-all active:scale-[0.98] shadow-lg shadow-gray-200 group-hover:shadow-xl">
+                             Resolver Solicitação
+                             <ArrowUpRight className="w-4 h-4" />
+                          </button>
                        </div>
                     </div>
                  ))}
@@ -220,9 +260,9 @@ const App: React.FC = () => {
             )}
 
             {/* GMB Header Card */}
-            <PremiumCard className="border-t-4 border-t-blue-500">
+            <PremiumCard className="border-t-4 border-t-blue-500" delay={100}>
               <div className="flex items-center gap-4 mb-4">
-                 <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                 <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200 animate-shine-effect">
                     <Store className="w-8 h-8" />
                  </div>
                  <div>
@@ -254,7 +294,7 @@ const App: React.FC = () => {
 
             <div className="grid grid-cols-1 gap-4">
               {/* Directions */}
-              <PremiumCard>
+              <PremiumCard delay={200}>
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
@@ -262,7 +302,9 @@ const App: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-xs text-gray-400 uppercase font-bold">Solicitações de Rota</p>
-                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{gmb.directions}</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                          <AnimatedCounter value={gmb.directions} />
+                        </h3>
                       </div>
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-gray-300" />
@@ -270,7 +312,7 @@ const App: React.FC = () => {
               </PremiumCard>
 
               {/* Calls */}
-              <PremiumCard>
+              <PremiumCard delay={300}>
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
@@ -278,7 +320,9 @@ const App: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-xs text-gray-400 uppercase font-bold">Chamadas do Perfil</p>
-                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{gmb.calls}</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                          <AnimatedCounter value={gmb.calls} />
+                        </h3>
                       </div>
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-gray-300" />
@@ -286,7 +330,7 @@ const App: React.FC = () => {
               </PremiumCard>
 
               {/* Views */}
-              <PremiumCard>
+              <PremiumCard delay={400}>
                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
@@ -294,26 +338,28 @@ const App: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-xs text-gray-400 uppercase font-bold">Visualizações (Search/Maps)</p>
-                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{gmb.views.toLocaleString()}</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                           <AnimatedCounter value={gmb.views} />
+                        </h3>
                       </div>
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-gray-300" />
                  </div>
               </PremiumCard>
             </div>
-          </>
+          </div>
         )}
 
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 glass-nav z-50 pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 glass-nav z-50 pb-safe animate-slide-up">
         <div className="flex justify-around items-center p-2">
           <button 
             onClick={() => setActiveTab(Tab.ADS)}
-            className={`flex flex-col items-center gap-1 p-3 rounded-xl w-full transition-all duration-300 ${activeTab === Tab.ADS ? 'text-blue-600' : 'text-gray-400'}`}
+            className={`flex flex-col items-center gap-1 p-3 rounded-xl w-full transition-all duration-300 active:scale-95 ${activeTab === Tab.ADS ? 'text-blue-600 scale-105' : 'text-gray-400'}`}
           >
-            <div className={`p-1 rounded-lg ${activeTab === Tab.ADS ? 'bg-blue-50' : 'bg-transparent'}`}>
+            <div className={`p-1 rounded-lg transition-colors duration-300 ${activeTab === Tab.ADS ? 'bg-blue-50' : 'bg-transparent'}`}>
               <LayoutGrid className={`w-6 h-6 ${activeTab === Tab.ADS ? 'stroke-[2.5px]' : 'stroke-2'}`} />
             </div>
             <span className="text-[10px] font-bold">Ads Overview</span>
@@ -321,9 +367,9 @@ const App: React.FC = () => {
           
           <button 
             onClick={() => setActiveTab(Tab.GMB)}
-            className={`flex flex-col items-center gap-1 p-3 rounded-xl w-full transition-all duration-300 ${activeTab === Tab.GMB ? 'text-blue-600' : 'text-gray-400'}`}
+            className={`flex flex-col items-center gap-1 p-3 rounded-xl w-full transition-all duration-300 active:scale-95 ${activeTab === Tab.GMB ? 'text-blue-600 scale-105' : 'text-gray-400'}`}
           >
-             <div className={`p-1 rounded-lg ${activeTab === Tab.GMB ? 'bg-blue-50' : 'bg-transparent'}`}>
+             <div className={`p-1 rounded-lg transition-colors duration-300 ${activeTab === Tab.GMB ? 'bg-blue-50' : 'bg-transparent'}`}>
               <MapPin className={`w-6 h-6 ${activeTab === Tab.GMB ? 'stroke-[2.5px]' : 'stroke-2'}`} />
             </div>
             <span className="text-[10px] font-bold">Google Maps</span>
