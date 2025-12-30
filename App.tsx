@@ -247,12 +247,6 @@ const App: React.FC = () => {
                           <p className="text-sm text-gray-600 leading-relaxed font-medium pl-1">
                              {action.description}
                           </p>
-
-                          {/* Footer Action */}
-                          <button className="mt-2 w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-black text-white py-3.5 rounded-xl text-sm font-bold transition-all active:scale-[0.98] shadow-lg shadow-gray-200 group-hover:shadow-xl">
-                             Resolver Solicitação
-                             <ArrowUpRight className="w-4 h-4" />
-                          </button>
                        </div>
                     </div>
                  ))}
